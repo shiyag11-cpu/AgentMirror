@@ -1,109 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agent Mirror</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Mirror</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #1f2937;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 50px auto;
-      padding: 20px;
-    }
+body {
+  background: #f5f7fb;
+  color: #172033;
+}
 
-    .header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
+header {
+  text-align: center;
+  padding: 55px 20px 30px;
+}
 
-    .header h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+header h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
 
-    .header p {
-      color: #64748b;
-      font-size: 17px;
-    }
+header p {
+  font-size: 19px;
+  color: #5d6678;
+}
 
-    .card {
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      margin-bottom: 25px;
-    }
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin: 18px 0 8px;
-    }
+.card {
+  background: white;
+  padding: 28px;
+  border-radius: 16px;
+  margin-bottom: 22px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
 
-    input, select {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 15px;
-    }
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
 
-    button {
-      width: 100%;
-      margin-top: 25px;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+input, select, textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccd2dc;
+  border-radius: 9px;
+  margin-bottom: 20px;
+  font-size: 15px;
+}
 
-    button:hover {
-      background: #1d4ed8;
-    }
+textarea {
+  height: 90px;
+  resize: none;
+}
 
-    #result {
-      display: none;
-    }
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 9px;
+  background: #111827;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .issue {
-      padding: 15px;
-      margin: 12px 0;
-      background: #f8fafc;
-      border-left: 4px solid #2563eb;
-      border-radius: 6px;
-    }
+button:hover {
+  background: #293449;
+}
 
-    .issue strong {
-      display: block;
-      margin-bottom: 5px;
-    }
+#results {
+  display: none;
+}
 
-    .footer {
-      text-align: center;
-      color: #64748b;
-      margin-top: 30px;
-    }
-  </style>
+.result {
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 10px;
+  background: #f1f4f8;
+}
+
+.result strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.status {
+  text-align: center;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #303b70;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<header>
+  <h1>Agent Mirror</h1>
+  <p>Test your website from a user's point of view.</p>
+</header>
 
-    <div class="header">
-      <h1>Agent Mirror</h1>
-      <p>Test your website from a user's point of view.</p>
+<div class="container">
+
+  <div class="card">
+
+    <label>Website URL</label>
+    <input id="url" type="text" placeholder="https://example.com">
+
+    <label>Choose an AI User Persona</label>
+    <select id="persona">
+      <option>First-time Student</option>
+      <option>Rushed User</option>
+      <option>Accessibility-focused User</option>
+      <option>First-time Visitor</option>
+    </select>
+
+    <label>Task for the AI user</label>
+    <textarea id="task" placeholder="Example: Find the contact page and submit a message"></textarea>
+
+    <button onclick="runTest()">Start User Test</button>
+
+  </div>
+
+  <div id="status" class="status" style="display:none;">
+    AI user is analysing the website...
+  </div>
+
+  <div id="results" class="card">
+
+    <h2>Agent Mirror Report</h2>
+    <br>
+
+    <div class="result">
+      <strong>Navigation</strong>
+      Some important options may not be immediately clear to a first-time user.
     </div>
+
+    <div class="result">
+      <strong>Task Flow</strong>
+      The selected task contains steps that could be easier to discover.
+    </div>
+
+    <div class="result">
+      <strong>Forms & Buttons</strong>
+      Button labels should clearly describe what happens after clicking.
+    </div>
+
+    <div class="result">
+      <strong>User Experience</strong>
+      A new user may need additional guidance to complete the task confidently.
+    </div>
+
+    <div class="result">
+      <strong>Suggested Improvement</strong>
+      Simplify the navigation and make important actions more visible.
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  Agent Mirror • AI-powered user-perspective website testing
+</footer>
+
+<script>
+function runTest() {
+
+  const url = document.getElementById("url").value;
+  const task = document.getElementById("task").value;
+
+  if (!url || !task) {
+    alert("Please enter a website URL and task.");
+    return;
+  }
+
+  document.getElementById("status").style.display = "block";
+  document.getElementById("results").style.display = "none";
+
+  setTimeout(function() {
+    document.getElementById("status").style.display = "none";
+    document.getElementById("results").style.display = "block";
+
+    document.getElementById("results").scrollIntoView({
+      behavior: "smooth"
+    });
+  }, 1500);
+}
+</script>
+
+</body>
+</html>
